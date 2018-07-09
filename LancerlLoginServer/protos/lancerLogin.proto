@@ -1,0 +1,70 @@
+
+syntax = "proto3";
+
+package lancer;
+
+service LancerLoginServer{
+
+    //注册接口
+    rpc Register (RegisterReq) returns (RegisterRsp) {}
+
+    // 登录接口
+    rpc Login (LoginReq) returns (LoginRsp) {}
+
+    // 通知push接口
+    rpc Notify (stream NotifyReq)returns (stream NotifyRsp) {}
+
+}
+//the regist message
+message RegisterReq{
+    string username = 1;//用户名
+    string password = 2;//密码
+}
+
+message RegisterRsp{
+    ICode ret = 1;//返回码
+    string msg = 2;//tips
+}
+
+//the login message
+message LoginReq{
+    string username = 1;//用户名
+    string password = 2;//密码
+    string guid = 3;//设备ID
+}
+
+message LoginRsp{ 
+    ICode ret = 1;//返回码
+    string token = 2;//token
+    string msg = 3;//tips
+}
+
+message NotifyReq{
+    ICode flag = 1;
+    string username=2;
+    string token = 3;
+}
+
+message NotifyRsp{
+    ICode flag = 1;
+    string guid = 2;
+}
+
+enum ICode{
+
+    E_SUCCESS = 0;//注册成功
+    E_DUPLICATE_ACCT = 101;//重复注册
+    E_ILLEGAL_ACCT = 102;//非法的用户名
+    E_ILLEGAL_PW = 103;//非法的密码
+    E_DB_ERROR = 104;
+
+    E_ACCT_ERROR = 201;//帐户错误
+    E_PW_ERROE = 202;//密码错误
+    E_DEV_DUPLICATE_LOGIN = 203;//设备已经登录
+    E_TOKEN_ERROR =204;
+    E_DEV_FORBIDDEN = 205;//设备被禁止
+        
+    E_OFFLINE_PUSH = 500;//下线通知
+    E_CLIENT_CLOSE = 501;//客户端关闭
+}
+
